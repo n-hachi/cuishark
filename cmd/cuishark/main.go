@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/n-hachi/go-cuishark/internal/cuishark"
 )
 
 func main() {
@@ -17,5 +19,10 @@ func main() {
 }
 
 func _main() int {
+	cs := cuishark.New()
+	err := cs.Init()
+	if err != nil {
+		return 1
+	}
 	return 0
 }

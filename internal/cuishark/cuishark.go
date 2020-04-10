@@ -7,6 +7,15 @@ type Cuishark struct {
 }
 
 func New() *Cuishark {
-	n := new(Cuishark)
-	return n
+	return &Cuishark{
+		f: frontend.New(),
+	}
+}
+
+func (c *Cuishark) Init() (err error) {
+	err = c.f.Init()
+	if err != nil {
+		return err
+	}
+	return nil
 }
