@@ -26,5 +26,9 @@ func _main() int {
 	if err != nil {
 		return 1
 	}
+
+	if err = cs.Run(); cs != nil {
+		return 1
+	}
 	return 0
 }

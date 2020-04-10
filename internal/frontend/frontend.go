@@ -1,11 +1,15 @@
 package frontend
 
 import (
+	"fmt"
+
+	"github.com/n-hachi/go-cuishark/internal/frontend/pane"
 	gc "github.com/rthornton128/goncurses"
 )
 
 type Frontend struct {
 	stdscr *gc.Window
+	p0     *pane.PacketPane
 }
 
 func New() *Frontend {
@@ -20,7 +24,7 @@ func (f *Frontend) Init() (err error) {
 	}
 
 	// Set as non-blocking read mode.
-	f.stdscr.Timeout(0)
+	f.stdscr.Timeout(-1)
 
 	// Turn off buffering to eliminate the enter key.
 	gc.CBreak(true)
@@ -43,9 +47,42 @@ func (f *Frontend) Init() (err error) {
 		return err
 	}
 
+	// Set sub window.
+	height, width := f.stdscr.MaxYX()
+	sub_height := height / 3
+
+	sw0 := f.stdscr.Sub(sub_height-2, width, sub_height*0+2, 0)
+	f.p0 = pane.NewPacketPane(sw0)
 	return nil
 }
 
 func End() {
 	gc.End()
+}
+
+func (f *Frontend) Height() (h int) {
+	h, _ = f.stdscr.MaxYX()
+	return h
+}
+
+func (f *Frontend) SubHeight() (sh int) {
+	sh = f.Height() / 3
+	return sh
+}
+
+func (f *Frontend) Width() (w int) {
+	_, w = f.stdscr.MaxYX()
+	return w
+}
+
+func (f *Frontend) Draw() {
+	f.stdscr.AttrOn(gc.A_REVERSE)
+	s := fmt.Sprintf("%-5s %-13s %-20s %-20s %-6s %5s %-10s",
+		"No.", "Time", "Source", "Destination", "Proto", "Len", "Info")
+	for i := len(s); i < f.Width(); i++ {
+		s += " "
+	}
+	f.stdscr.MovePrint(0, 0, s)
+	f.stdscr.AttrOff(gc.A_REVERSE)
+	f.stdscr.Refresh()
 }

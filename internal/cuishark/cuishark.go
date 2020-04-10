@@ -1,6 +1,10 @@
 package cuishark
 
-import "github.com/n-hachi/go-cuishark/internal/frontend"
+import (
+	"time"
+
+	"github.com/n-hachi/go-cuishark/internal/frontend"
+)
 
 type Cuishark struct {
 	f *frontend.Frontend
@@ -22,4 +26,10 @@ func (c *Cuishark) Init() (err error) {
 
 func End() {
 	frontend.End()
+}
+
+func (c *Cuishark) Run() (err error) {
+	c.f.Draw()
+	time.Sleep(time.Second * 1)
+	return nil
 }
