@@ -45,3 +45,7 @@ func (f *Frontend) Init() (err error) {
 
 	return nil
 }
+
+func End() {
+	gc.End()
+}

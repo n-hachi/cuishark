@@ -19,3 +19,7 @@ func (c *Cuishark) Init() (err error) {
 	}
 	return nil
 }
+
+func End() {
+	frontend.End()
+}
