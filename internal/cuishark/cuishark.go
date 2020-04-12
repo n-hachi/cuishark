@@ -1,7 +1,7 @@
 package cuishark
 
 import (
-	"time"
+	"context"
 
 	"github.com/n-hachi/go-cuishark/internal/frontend"
 )
@@ -28,8 +28,20 @@ func End() {
 	frontend.End()
 }
 
-func (c *Cuishark) Run() (err error) {
+func (c *Cuishark) Run(ctx context.Context) (err error) {
 	c.f.Draw()
-	time.Sleep(time.Second * 1)
+
+	ch := c.f.Gen(ctx)
+	for {
+		select {
+		case k := <-ch:
+			c := string(int(k))
+			if c == "q" {
+				goto L
+			}
+		}
+	}
+L:
+
 	return nil
 }

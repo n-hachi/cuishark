@@ -1,6 +1,7 @@
 package frontend
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/n-hachi/go-cuishark/internal/frontend/pane"
@@ -85,4 +86,23 @@ func (f *Frontend) Draw() {
 	f.stdscr.MovePrint(0, 0, s)
 	f.stdscr.AttrOff(gc.A_REVERSE)
 	f.stdscr.Refresh()
+}
+
+func (f *Frontend) Gen(ctx context.Context) <-chan gc.Key {
+	ch := make(chan gc.Key)
+	go func() {
+		defer close(ch)
+		for {
+			k := f.stdscr.GetChar()
+			if k != 0 {
+				ch <- k
+			}
+			select {
+			case <-ctx.Done():
+				break
+			default:
+			}
+		}
+	}()
+	return ch
 }

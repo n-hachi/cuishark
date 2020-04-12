@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -19,6 +20,9 @@ func main() {
 }
 
 func _main() int {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	cs := cuishark.New()
 
 	defer cuishark.End()
@@ -27,7 +31,7 @@ func _main() int {
 		return 1
 	}
 
-	if err = cs.Run(); cs != nil {
+	if err = cs.Run(ctx); cs != nil {
 		return 1
 	}
 	return 0
