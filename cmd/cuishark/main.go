@@ -25,11 +25,11 @@ func _main() int {
 
 	cs := cuishark.New()
 
-	defer cuishark.End()
 	err := cs.Init()
 	if err != nil {
 		return 1
 	}
+	defer cs.End()
 
 	if err = cs.Run(ctx); cs != nil {
 		return 1

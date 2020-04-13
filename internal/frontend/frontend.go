@@ -67,7 +67,7 @@ func (f *Frontend) Height() (h int) {
 }
 
 func (f *Frontend) SubHeight() (sh int) {
-	sh = f.Height() / 3
+	sh = f.Height()
 	return sh
 }
 
@@ -88,21 +88,28 @@ func (f *Frontend) Draw() {
 	f.stdscr.Refresh()
 }
 
-func (f *Frontend) Gen(ctx context.Context) <-chan gc.Key {
-	ch := make(chan gc.Key)
+func (f *Frontend) OpenChan(ctx context.Context) chan gc.Key {
+	ch := make(chan gc.Key, 1)
+
+	// Receive key input and relay to channe.
 	go func() {
 		defer close(ch)
 		for {
 			k := f.stdscr.GetChar()
-			if k != 0 {
-				ch <- k
-			}
-			select {
-			case <-ctx.Done():
+			if k == 0 {
 				break
-			default:
 			}
+			ch <- k
 		}
 	}()
+
+	// Watch context variable and close if context.Done is called.
+	go func() {
+		defer close(ch)
+		select {
+		case <-ctx.Done():
+		}
+	}()
+
 	return ch
 }

@@ -24,14 +24,14 @@ func (c *Cuishark) Init() (err error) {
 	return nil
 }
 
-func End() {
+func (c *Cuishark) End() {
 	frontend.End()
 }
 
 func (c *Cuishark) Run(ctx context.Context) (err error) {
 	c.f.Draw()
 
-	ch := c.f.Gen(ctx)
+	ch := c.f.OpenChan(ctx)
 	for {
 		select {
 		case k := <-ch:
@@ -42,6 +42,5 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 		}
 	}
 L:
-
 	return nil
 }
