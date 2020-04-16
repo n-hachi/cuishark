@@ -25,3 +25,12 @@ func TestNewPcapHanddlerWithExistenceFile(t *testing.T) {
 		t.Error("Nil handler returned for existent file open")
 	}
 }
+
+func TestOpenChan(t *testing.T) {
+	handler, _ := NewPcapHandler("test_ethernet.pcap")
+	ch := handler.OpenChan()
+	_, ok := <-ch
+	if ok == false {
+		t.Error("Channel should have some packet informations.")
+	}
+}
