@@ -1,9 +1,15 @@
 package packet
 
-import "github.com/google/gopacket"
+import (
+	"github.com/google/gopacket"
+)
 
 type Layer struct {
 	gl gopacket.Layer
+}
+
+func (l *Layer) Oneline() (s string) {
+	return Oneline(l.gl)
 }
 
 func NewLayer(gl gopacket.Layer) (l *Layer) {
@@ -52,4 +58,17 @@ func (p *Packet) Src() (src gopacket.Endpoint) {
 
 func (p *Packet) Dst() (dst gopacket.Endpoint) {
 	return p.dst
+}
+
+func (p *Packet) Layer(index int) (l *Layer) {
+	return p.l[index]
+}
+
+func (p *Packet) LastLayer() (l *Layer) {
+	i := p.Size() - 1
+	return p.l[i]
+}
+
+func (p *Packet) Oneline() (s string) {
+	return p.LastLayer().Oneline()
 }
