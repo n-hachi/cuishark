@@ -1,6 +1,8 @@
 package packet
 
 import (
+	"strings"
+
 	"github.com/google/gopacket"
 )
 
@@ -9,7 +11,10 @@ type Layer struct {
 }
 
 func (l *Layer) Oneline() (s string) {
-	return Oneline(l.gl)
+	s = Oneline(l.gl)
+	s = strings.TrimLeft(s, "{")
+	s = strings.TrimRight(s, "}")
+	return s
 }
 
 func NewLayer(gl gopacket.Layer) (l *Layer) {

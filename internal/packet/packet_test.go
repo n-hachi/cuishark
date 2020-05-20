@@ -81,8 +81,9 @@ func TestPacket_Dst(t *testing.T) {
 func TestPacket_Oneline(t *testing.T) {
 	gp, _ := GetPacket()
 	p := NewPacket(gp)
-	if !strings.HasPrefix(p.Oneline(), "SrcPort=44644") {
-		t.Errorf("p.Oneline() should be start with \"SrcPort=44644\", but actually \"%s\"\n", p.Oneline())
+	cmp := "SrcPort:44644"
+	if !strings.HasPrefix(p.Oneline(), cmp) {
+		t.Errorf("p.Oneline() should be start with \"%s\", but actually \"%s\"\n", cmp, p.Oneline())
 	} else {
 		t.Logf("p.Oneline() is %s\n", p.Oneline())
 	}

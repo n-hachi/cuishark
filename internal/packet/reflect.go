@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"unicode"
 )
 
+// Oneline returns json like string which represent input variable.
 func Oneline(i interface{}) (s string) {
 	v := reflect.ValueOf(i)
-	return oneline(v)
+	s = oneline(v)
+	return s
 }
 
 func oneline(v reflect.Value) (s string) {
@@ -22,19 +25,24 @@ func oneline(v reflect.Value) (s string) {
 	switch v.Kind() {
 	case reflect.Struct:
 		s = "{"
-		for idx := 0; idx < t.NumField(); idx++ {
-			t2 := t.Field(idx)
+		for i := 0; i < t.NumField(); i++ {
+			t2 := t.Field(i)
 			if t2.Anonymous {
 				continue
 			}
-			s += fmt.Sprintf("%s=%v, ", t.Field(idx).Name, oneline(v.Field(idx)))
+
+			// Do not print private variables.
+			if r := rune(t2.Name[0]); !unicode.IsUpper(r) {
+				continue
+			}
+			s += fmt.Sprintf("%s:%v, ", t.Field(i).Name, oneline(v.Field(i)))
 		}
 		s = strings.TrimRight(s, ", ")
 		s += "}"
-	case reflect.Array:
+	case reflect.Array, reflect.Slice:
 		s = "["
-		for idx := 0; idx < t.Len(); idx++ {
-			s += fmt.Sprintf("%d:%v, ", idx, oneline(v.Index(idx)))
+		for i := 0; i < v.Len(); i++ {
+			s += fmt.Sprintf("%v, ", oneline(v.Index(i)))
 		}
 		s = strings.TrimRight(s, ", ")
 		s += "]"
