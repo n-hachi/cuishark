@@ -23,15 +23,15 @@ func _main() int {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	cs := cuishark.New()
-
-	err := cs.Init()
+	// Get pcap file path
+	path := os.Args[1]
+	cs, err := cuishark.New(path)
 	if err != nil {
-		return 1
+		panic(err)
 	}
 	defer cs.End()
 
-	if err = cs.Run(ctx); cs != nil {
+	if err = cs.Run(ctx); err != nil {
 		return 1
 	}
 	return 0

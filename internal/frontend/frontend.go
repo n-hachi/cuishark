@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/n-hachi/go-cuishark/internal/frontend/pane"
+	"github.com/n-hachi/go-cuishark/internal/packet"
 	gc "github.com/rthornton128/goncurses"
 )
 
@@ -13,15 +14,12 @@ type Frontend struct {
 	p0     *pane.PacketPane
 }
 
-func New() *Frontend {
-	f := new(Frontend)
-	return f
-}
+func New() (f *Frontend, err error) {
+	f = new(Frontend)
 
-func (f *Frontend) Init() (err error) {
 	f.stdscr, err = gc.Init()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Set as non-blocking read mode.
@@ -45,7 +43,7 @@ func (f *Frontend) Init() (err error) {
 	// Discard all input.
 	err = gc.FlushInput()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Set sub window.
@@ -54,7 +52,8 @@ func (f *Frontend) Init() (err error) {
 
 	sw0 := f.stdscr.Sub(sub_height-2, width, sub_height*0+2, 0)
 	f.p0 = pane.NewPacketPane(sw0)
-	return nil
+
+	return f, nil
 }
 
 func End() {
@@ -112,4 +111,8 @@ func (f *Frontend) OpenChan(ctx context.Context) chan gc.Key {
 	}()
 
 	return ch
+}
+
+func (f *Frontend) Reflesh(pl []*packet.Packet) {
+	f.p0.Reflesh(pl)
 }
