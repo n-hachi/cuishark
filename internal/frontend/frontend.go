@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/n-hachi/go-cuishark/internal/frontend/pane"
-	"github.com/n-hachi/go-cuishark/internal/packet"
+	"github.com/n-hachi/go-cuishark/internal/utils"
 	gc "github.com/rthornton128/goncurses"
 )
 
@@ -113,6 +113,6 @@ func (f *Frontend) OpenChan(ctx context.Context) chan gc.Key {
 	return ch
 }
 
-func (f *Frontend) Reflesh(pl []*packet.Packet) {
-	f.p0.Reflesh(pl)
+func (f *Frontend) Reflesh(s *utils.Status) {
+	f.p0.Reflesh(s)
 }
