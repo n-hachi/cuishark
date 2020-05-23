@@ -77,12 +77,12 @@ func (f *Frontend) Width() (w int) {
 
 func (f *Frontend) Draw() {
 	f.stdscr.AttrOn(gc.A_REVERSE)
-	s := fmt.Sprintf("%-5s %-13s %-20s %-20s %-6s %5s %-10s",
+	s := fmt.Sprintf("%-5s %-13s %-20s %-20s %-6s %-5s %-10s",
 		"No.", "Time", "Source", "Destination", "Proto", "Len", "Info")
 	for i := len(s); i < f.Width(); i++ {
 		s += " "
 	}
-	f.stdscr.MovePrint(0, 0, s)
+	f.stdscr.MovePrint(1, 0, s)
 	f.stdscr.AttrOff(gc.A_REVERSE)
 	f.stdscr.Refresh()
 }

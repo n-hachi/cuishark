@@ -2,7 +2,6 @@ package packet
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/google/gopacket"
@@ -75,16 +74,5 @@ func TestPacket_Dst(t *testing.T) {
 		t.Errorf("p.Dst() should be 10.1.1.1, but actually %v\n", p.Dst())
 	} else {
 		t.Log("p.Dst() is 10.1.1.1 as expected\n")
-	}
-}
-
-func TestPacket_Oneline(t *testing.T) {
-	gp, _ := GetPacket()
-	p := NewPacket(gp)
-	cmp := "SrcPort:44644"
-	if !strings.HasPrefix(p.Oneline(), cmp) {
-		t.Errorf("p.Oneline() should be start with \"%s\", but actually \"%s\"\n", cmp, p.Oneline())
-	} else {
-		t.Logf("p.Oneline() is %s\n", p.Oneline())
 	}
 }

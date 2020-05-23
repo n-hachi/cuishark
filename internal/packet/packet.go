@@ -1,6 +1,7 @@
 package packet
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/google/gopacket"
@@ -27,11 +28,16 @@ type Packet struct {
 	l        []*Layer
 	lt       gopacket.LayerType
 	src, dst gopacket.Endpoint
+	gp       gopacket.Packet
 }
 
 func NewPacket(gp gopacket.Packet) (p *Packet) {
 	p = new(Packet)
 	for _, gl := range gp.Layers() {
+		// Do not regard 'Payload' layertype as main target layer.
+		if gl.LayerType() == gopacket.LayerTypePayload {
+			break
+		}
 		p.l = append(p.l, NewLayer(gl))
 		p.lt = gl.LayerType()
 	}
@@ -45,6 +51,9 @@ func NewPacket(gp gopacket.Packet) (p *Packet) {
 		lf := link.LinkFlow()
 		p.src, p.dst = lf.Endpoints()
 	}
+
+	// Save original gopacket.Packet
+	p.gp = gp
 
 	return p
 }
@@ -74,6 +83,20 @@ func (p *Packet) LastLayer() (l *Layer) {
 	return p.l[i]
 }
 
+func (p *Packet) UnixTime() (t int64) {
+	return p.gp.Metadata().Timestamp.Unix()
+}
+
+func (p *Packet) Length() (l int) {
+	return p.gp.Metadata().CaptureLength
+}
+
 func (p *Packet) Oneline() (s string) {
-	return p.LastLayer().Oneline()
+	return fmt.Sprintf("%-13v %-20v %-20v %-6v %-5v %-10v",
+		p.UnixTime(),
+		p.Src(),
+		p.Dst(),
+		p.LayerType(),
+		p.Length(),
+		p.LastLayer().Oneline())
 }
