@@ -45,3 +45,7 @@ func (s *Status) MovePctIdx(d Direction) {
 func (s *Status) PctIdx() (pctIdx int) {
 	return s.pctIdx
 }
+
+func (s *Status) FocusedPacket() (p *packet.Packet) {
+	return s.PacketList()[s.PctIdx()]
+}

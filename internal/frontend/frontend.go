@@ -12,6 +12,7 @@ import (
 type Frontend struct {
 	stdscr *gc.Window
 	p0     *pane.PacketPane
+	p1     *pane.DetailPane
 }
 
 func New() (f *Frontend, err error) {
@@ -51,7 +52,9 @@ func New() (f *Frontend, err error) {
 	sub_height := height / 3
 
 	sw0 := f.stdscr.Sub(sub_height-2, width, sub_height*0+2, 0)
+	sw1 := f.stdscr.Sub(sub_height-2, width, sub_height*1+2, 0)
 	f.p0 = pane.NewPacketPane(sw0)
+	f.p1 = pane.NewDetailPane(sw1)
 
 	return f, nil
 }
@@ -65,11 +68,6 @@ func (f *Frontend) Height() (h int) {
 	return h
 }
 
-func (f *Frontend) SubHeight() (sh int) {
-	sh = f.Height()
-	return sh
-}
-
 func (f *Frontend) Width() (w int) {
 	_, w = f.stdscr.MaxYX()
 	return w
@@ -77,12 +75,22 @@ func (f *Frontend) Width() (w int) {
 
 func (f *Frontend) Draw() {
 	f.stdscr.AttrOn(gc.A_REVERSE)
+	subHeight := f.Height() / 3
+
+	// Print first pane's explanation
 	s := fmt.Sprintf("%-5s %-13s %-20s %-20s %-6s %-5s %-10s",
 		"No.", "Time", "Source", "Destination", "Proto", "Len", "Info")
 	for i := len(s); i < f.Width(); i++ {
 		s += " "
 	}
-	f.stdscr.MovePrint(1, 0, s)
+	f.stdscr.MovePrint(subHeight*0+1, 0, s)
+
+	// Print second pane's explanation
+	s = "Protocol Details"
+	for i := len(s); i < f.Width(); i++ {
+		s += " "
+	}
+	f.stdscr.MovePrint(subHeight*1+1, 0, s)
 	f.stdscr.AttrOff(gc.A_REVERSE)
 	f.stdscr.Refresh()
 }
@@ -115,4 +123,5 @@ func (f *Frontend) OpenChan(ctx context.Context) chan gc.Key {
 
 func (f *Frontend) Reflesh(s *utils.Status) {
 	f.p0.Reflesh(s)
+	f.p1.Reflesh(s)
 }
