@@ -18,7 +18,10 @@ func NewDetailPane(w *gc.Window) *DetailPane {
 func (dp *DetailPane) Reflesh(status *utils.Status) (err error) {
 	dp.w.Clear()
 
-	_ = status.FocusedPacket()
+	p := status.FocusedPacket()
+	for i, s := range p.Detail() {
+		dp.w.MovePrintf(i, 0, "%s", s)
+	}
 
 	dp.w.Refresh()
 

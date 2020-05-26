@@ -1,6 +1,7 @@
 package packet
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -42,5 +43,13 @@ func TestOneline_ArrayStruct(t *testing.T) {
 	cmp := "{Ary:[1 2 3]}"
 	if ol := Oneline(as); ol != cmp {
 		t.Errorf("Oneline(as) should be %s, but actually %s", cmp, ol)
+	}
+}
+
+func TestDetail_SimpleStruct(t *testing.T) {
+	ss := SimpleStruct{I: 1, U: 2}
+	cmp := []string{"I:1", "U:2"}
+	if ol := Detail(ss); reflect.DeepEqual(ol, cmp) {
+		t.Errorf("Oneline(as) should be %v, but actually %v", cmp, ol)
 	}
 }

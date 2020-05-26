@@ -76,3 +76,9 @@ func TestPacket_Dst(t *testing.T) {
 		t.Log("p.Dst() is 10.1.1.1 as expected\n")
 	}
 }
+
+func TestPacket_Detail(t *testing.T) {
+	gp, _ := GetPacket()
+	p := NewPacket(gp)
+	t.Logf("p.Detail() = %v\n", p.Detail())
+}

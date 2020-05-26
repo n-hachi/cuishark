@@ -18,6 +18,12 @@ func (l *Layer) Oneline() (s string) {
 	return s
 }
 
+func (l *Layer) Detail() (sl []string) {
+	sl = append(sl, l.gl.LayerType().String())
+	sl = append(sl, Detail(l.gl)...)
+	return sl
+}
+
 func NewLayer(gl gopacket.Layer) (l *Layer) {
 	return &Layer{
 		gl: gl,
@@ -99,4 +105,11 @@ func (p *Packet) Oneline() (s string) {
 		p.LayerType(),
 		p.Length(),
 		p.LastLayer().Oneline())
+}
+
+func (p *Packet) Detail() (sl []string) {
+	for _, l := range p.l {
+		sl = append(sl, l.Detail()...)
+	}
+	return sl
 }
