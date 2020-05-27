@@ -13,6 +13,7 @@ type Frontend struct {
 	stdscr *gc.Window
 	p0     *pane.PacketPane
 	p1     *pane.DetailPane
+	p2     *pane.BinaryPane
 }
 
 func New() (f *Frontend, err error) {
@@ -53,8 +54,10 @@ func New() (f *Frontend, err error) {
 
 	sw0 := f.stdscr.Sub(sub_height-2, width, sub_height*0+2, 0)
 	sw1 := f.stdscr.Sub(sub_height-2, width, sub_height*1+2, 0)
+	sw2 := f.stdscr.Sub(sub_height-2, width, sub_height*2+2, 0)
 	f.p0 = pane.NewPacketPane(sw0)
 	f.p1 = pane.NewDetailPane(sw1)
+	f.p2 = pane.NewBinaryPane(sw2)
 
 	return f, nil
 }
@@ -132,4 +135,5 @@ func (f *Frontend) OpenChan(ctx context.Context) chan gc.Key {
 func (f *Frontend) Reflesh(s *utils.Status) {
 	f.p0.Reflesh(s)
 	f.p1.Reflesh(s)
+	f.p2.Reflesh(s)
 }

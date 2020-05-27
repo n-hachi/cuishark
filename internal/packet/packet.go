@@ -3,6 +3,7 @@ package packet
 import (
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/google/gopacket"
 )
@@ -111,5 +112,38 @@ func (p *Packet) Detail() (sl []string) {
 	for _, l := range p.l {
 		sl = append(sl, l.Detail()...)
 	}
+	return sl
+}
+
+func (p *Packet) Binary() (sl []string) {
+	bytes := p.gp.Data()
+	line := len(bytes)
+
+	for i := 0; i < line; i += 16 {
+		sAdr := fmt.Sprintf("%04x", i)
+		sHex := ""
+		sChr := ""
+		for j := 0; j < 16; j++ {
+			if j == 8 {
+				sHex += " "
+				sChr += " "
+			}
+
+			if (i + j) < line {
+				sHex += fmt.Sprintf("%02x ", bytes[i+j])
+				r := rune(bytes[i+j])
+				if r < unicode.MaxASCII && unicode.IsGraphic(r) {
+					sChr += string(bytes[i+j])
+				} else {
+					sChr += "."
+				}
+			} else {
+				sHex += "   "
+				sChr += " "
+			}
+		}
+		sl = append(sl, fmt.Sprintf(" %s %s %s", sAdr, sHex, sChr))
+	}
+
 	return sl
 }
