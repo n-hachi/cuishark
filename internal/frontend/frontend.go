@@ -91,6 +91,14 @@ func (f *Frontend) Draw() {
 		s += " "
 	}
 	f.stdscr.MovePrint(subHeight*1+1, 0, s)
+
+	// Print third pane's explanation
+	s = "Binary Details"
+	for i := len(s); i < f.Width(); i++ {
+		s += " "
+	}
+	f.stdscr.MovePrint(subHeight*2+1, 0, s)
+
 	f.stdscr.AttrOff(gc.A_REVERSE)
 	f.stdscr.Refresh()
 }
