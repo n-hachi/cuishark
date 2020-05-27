@@ -6,12 +6,14 @@ import (
 )
 
 type BinaryPane struct {
-	w *gc.Window
+	w   *gc.Window
+	idx int
 }
 
-func NewBinaryPane(w *gc.Window) *BinaryPane {
+func NewBinaryPane(w *gc.Window, idx int) *BinaryPane {
 	return &BinaryPane{
-		w: w,
+		w:   w,
+		idx: idx,
 	}
 }
 

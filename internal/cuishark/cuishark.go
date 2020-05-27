@@ -2,15 +2,25 @@ package cuishark
 
 import (
 	"context"
+	"unsafe"
 
 	"github.com/n-hachi/go-cuishark/internal/frontend"
 	"github.com/n-hachi/go-cuishark/internal/handler"
 	"github.com/n-hachi/go-cuishark/internal/packet"
 	"github.com/n-hachi/go-cuishark/internal/utils"
+
+	gc "github.com/rthornton128/goncurses"
+)
+
+const (
+	Packet = iota
+	Detail
+	Binary
 )
 
 type Cuishark struct {
 	f *frontend.Frontend
+	p unsafe.Pointer
 	h *handler.PcapHandler
 	s *utils.Status
 }
@@ -50,11 +60,28 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 			ch := string(int(k))
 			if ch == "q" {
 				goto L
-			} else if ch == "k" {
-				c.s.MovePctIdx(utils.Up)
-			} else if ch == "j" {
-				c.s.MovePctIdx(utils.Down)
+			} else if ch == "k" || ch == "j" {
+				var d utils.Direction
+				if ch == "j" {
+					d = utils.Down
+				} else {
+					d = utils.Up
+				}
+
+				switch c.s.PaneIdx() {
+				case Packet:
+					c.s.MovePacketIdx(d)
+				case Detail:
+					c.s.MoveDetailIdx(d)
+				case Binary:
+					c.s.MoveBinaryIdx(d)
+				default:
+					panic("Code error")
+				}
+			} else if k == gc.KEY_TAB {
+				c.s.RotatePaneIdx()
 			}
+
 		case gp, ok := <-pctChan:
 			if !ok {
 				pctChan = nil

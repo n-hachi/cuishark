@@ -55,9 +55,9 @@ func New() (f *Frontend, err error) {
 	sw0 := f.stdscr.Sub(sub_height-2, width, sub_height*0+2, 0)
 	sw1 := f.stdscr.Sub(sub_height-2, width, sub_height*1+2, 0)
 	sw2 := f.stdscr.Sub(sub_height-2, width, sub_height*2+2, 0)
-	f.p0 = pane.NewPacketPane(sw0)
-	f.p1 = pane.NewDetailPane(sw1)
-	f.p2 = pane.NewBinaryPane(sw2)
+	f.p0 = pane.NewPacketPane(sw0, 0)
+	f.p1 = pane.NewDetailPane(sw1, 1)
+	f.p2 = pane.NewBinaryPane(sw2, 2)
 
 	return f, nil
 }
