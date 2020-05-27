@@ -22,24 +22,29 @@ func (dp *DetailPane) Reflesh(status *utils.Status) (err error) {
 
 	p := status.FocusedPacket()
 
-	for i, s := range p.Detail() {
-		// Check whether current focused pane is myself, and current line.
-		flg := (status.DetailIdx() == i && status.PaneIdx() == dp.idx)
+	height := 0
+	for i, l := range p.LayerList() {
+		for j, s := range l.Detail() {
+			// Check whether current focused pane is myself, and current line.
+			flg := (status.DetailIdx() == i && status.PaneIdx() == dp.idx && j == 0)
 
-		// Set underline on
-		if flg {
-			if err = dp.w.AttrOn(gc.A_UNDERLINE); err != nil {
-				return err
+			// Set underline on
+			if flg {
+				if err = dp.w.AttrOn(gc.A_UNDERLINE); err != nil {
+					return err
+				}
 			}
-		}
 
-		dp.w.MovePrintf(i, 0, "%s", s)
+			dp.w.MovePrintf(height, 0, "%s", s)
 
-		// Set underline off
-		if flg {
-			if err = dp.w.AttrOff(gc.A_UNDERLINE); err != nil {
-				return err
+			// Set underline off
+			if flg {
+				if err = dp.w.AttrOff(gc.A_UNDERLINE); err != nil {
+					return err
+				}
 			}
+
+			height++
 		}
 	}
 

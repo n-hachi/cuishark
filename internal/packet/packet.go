@@ -32,7 +32,7 @@ func NewLayer(gl gopacket.Layer) (l *Layer) {
 }
 
 type Packet struct {
-	l        []*Layer
+	ll       []*Layer
 	lt       gopacket.LayerType
 	src, dst gopacket.Endpoint
 	gp       gopacket.Packet
@@ -45,7 +45,7 @@ func NewPacket(gp gopacket.Packet) (p *Packet) {
 		if gl.LayerType() == gopacket.LayerTypePayload {
 			break
 		}
-		p.l = append(p.l, NewLayer(gl))
+		p.ll = append(p.ll, NewLayer(gl))
 		p.lt = gl.LayerType()
 	}
 
@@ -65,8 +65,12 @@ func NewPacket(gp gopacket.Packet) (p *Packet) {
 	return p
 }
 
+func (p *Packet) LayerList() (ll []*Layer) {
+	return p.ll
+}
+
 func (p *Packet) Size() (s int) {
-	return len(p.l)
+	return len(p.ll)
 }
 
 func (p *Packet) LayerType() (lt gopacket.LayerType) {
@@ -82,12 +86,12 @@ func (p *Packet) Dst() (dst gopacket.Endpoint) {
 }
 
 func (p *Packet) Layer(index int) (l *Layer) {
-	return p.l[index]
+	return p.ll[index]
 }
 
 func (p *Packet) LastLayer() (l *Layer) {
 	i := p.Size() - 1
-	return p.l[i]
+	return p.ll[i]
 }
 
 func (p *Packet) UnixTime() (t int64) {
@@ -109,7 +113,7 @@ func (p *Packet) Oneline() (s string) {
 }
 
 func (p *Packet) Detail() (sl []string) {
-	for _, l := range p.l {
+	for _, l := range p.ll {
 		sl = append(sl, l.Detail()...)
 	}
 	return sl
@@ -142,7 +146,7 @@ func (p *Packet) Binary() (sl []string) {
 				sChr += " "
 			}
 		}
-		sl = append(sl, fmt.Sprintf(" %s %s %s", sAdr, sHex, sChr))
+		sl = append(sl, fmt.Sprintf(" %s    %s  %s", sAdr, sHex, sChr))
 	}
 
 	return sl

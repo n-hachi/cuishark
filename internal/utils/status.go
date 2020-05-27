@@ -78,7 +78,7 @@ func (s *Status) MoveBinaryIdx(d Direction) {
 		}
 	case Down:
 		p := s.FocusedPacket()
-		if s.detailIdx < (len(p.Binary()) - 1) {
+		if s.binaryIdx < (len(p.Binary()) - 1) {
 			s.binaryIdx++
 		}
 	default:
