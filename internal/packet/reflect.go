@@ -31,6 +31,10 @@ func oneline(v reflect.Value) (s string) {
 				continue
 			}
 
+			if t2.Name == "Options" || t2.Name == "Padding" {
+				continue
+			}
+
 			// Do not print private variables.
 			if r := rune(t2.Name[0]); !unicode.IsUpper(r) {
 				continue
@@ -76,6 +80,10 @@ func detail(v reflect.Value, indentLevel int, indentWidth int) (sl []string) {
 		for i := 0; i < t.NumField(); i++ {
 			t2 := t.Field(i)
 			if t2.Anonymous {
+				continue
+			}
+
+			if t2.Name == "Options" || t2.Name == "Padding" {
 				continue
 			}
 
