@@ -17,8 +17,13 @@ func NewBinaryPane(w *gc.Window, idx int) *BinaryPane {
 	}
 }
 
+func (bp *BinaryPane) MaxYX() (y int, x int) {
+	return bp.w.MaxYX()
+}
+
 func (bp *BinaryPane) Reflesh(status *utils.Status) (err error) {
 	bp.w.Clear()
+	_, x := bp.MaxYX()
 
 	p := status.FocusedPacket()
 
@@ -33,6 +38,7 @@ func (bp *BinaryPane) Reflesh(status *utils.Status) (err error) {
 			}
 		}
 
+		s = utils.CutStringTail(s, x)
 		bp.w.MovePrintf(i, 0, "%s", s)
 
 		// Set underline off

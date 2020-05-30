@@ -17,8 +17,13 @@ func NewDetailPane(w *gc.Window, idx int) *DetailPane {
 	}
 }
 
+func (dp *DetailPane) MaxYX() (y int, x int) {
+	return dp.w.MaxYX()
+}
+
 func (dp *DetailPane) Reflesh(status *utils.Status) (err error) {
 	dp.w.Clear()
+	_, x := dp.MaxYX()
 
 	p := status.FocusedPacket()
 
@@ -35,6 +40,7 @@ func (dp *DetailPane) Reflesh(status *utils.Status) (err error) {
 				}
 			}
 
+			s = utils.CutStringTail(s, x)
 			dp.w.MovePrintf(height, 0, "%s", s)
 
 			// Set underline off

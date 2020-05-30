@@ -38,7 +38,8 @@ func (pp *PacketPane) Reflesh(status *utils.Status) (err error) {
 			}
 		}
 		s := fmt.Sprintf("%5d %s", i+1, p.Oneline())
-		pp.w.MovePrint(i, 0, s[:x])
+		s = utils.CutStringTail(s, x)
+		pp.w.MovePrint(i, 0, s)
 
 		// Set underline off
 		if flg {
