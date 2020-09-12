@@ -4,10 +4,10 @@ import (
 	"context"
 	"unsafe"
 
-	"github.com/n-hachi/go-cuishark/internal/frontend"
-	"github.com/n-hachi/go-cuishark/internal/handler"
-	"github.com/n-hachi/go-cuishark/internal/packet"
-	"github.com/n-hachi/go-cuishark/internal/utils"
+	"github.com/n-hachi/cuishark/internal/frontend"
+	"github.com/n-hachi/cuishark/internal/handler"
+	"github.com/n-hachi/cuishark/internal/packet"
+	"github.com/n-hachi/cuishark/internal/utils"
 
 	gc "github.com/rthornton128/goncurses"
 )

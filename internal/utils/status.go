@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/n-hachi/go-cuishark/internal/packet"
+import "github.com/n-hachi/cuishark/internal/packet"
 
 type Direction int
 
