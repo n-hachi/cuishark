@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/n-hachi/go-cuishark/internal/frontend/pane"
-	"github.com/n-hachi/go-cuishark/internal/utils"
+	"github.com/n-hachi/cuishark/internal/frontend/pane"
+	"github.com/n-hachi/cuishark/internal/utils"
 	gc "github.com/rthornton128/goncurses"
 )
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/n-hachi/go-cuishark/internal/cuishark"
+	"github.com/n-hachi/cuishark/internal/cuishark"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package pane
 import (
 	"fmt"
 
-	"github.com/n-hachi/go-cuishark/internal/utils"
+	"github.com/n-hachi/cuishark/internal/utils"
 	gc "github.com/rthornton128/goncurses"
 )
 
