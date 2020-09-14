@@ -2,6 +2,7 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
+GOVET=$(GOCMD) vet
 BINARY_NAME=cuishark
 MAIN=cmd/cuishark/main.go
 
@@ -15,3 +16,5 @@ test:
 	$(GOTEST) ./...
 vtest:
 	$(GOTEST) -v ./...
+vet:
+	$(GOVET) ./...
