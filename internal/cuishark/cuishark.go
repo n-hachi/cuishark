@@ -57,7 +57,7 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 	for {
 		select {
 		case k := <-keyChan:
-			ch := string(int(k))
+			ch := string(rune(int(k)))
 			if ch == "q" {
 				goto L
 			} else if ch == "k" || ch == "j" {
