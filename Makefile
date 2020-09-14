@@ -12,4 +12,6 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 test:
+	$(GOTEST) ./...
+vtest:
 	$(GOTEST) -v ./...
