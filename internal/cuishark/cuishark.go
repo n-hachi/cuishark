@@ -2,6 +2,7 @@ package cuishark
 
 import (
 	"context"
+	"log"
 	"unsafe"
 
 	"github.com/n-hachi/cuishark/internal/frontend"
@@ -41,6 +42,13 @@ func New(path string) (c *Cuishark, err error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Generate logger
+	w, err := utils.IoWriter()
+	if err != nil {
+		return nil, err
+	}
+	log.SetOutput(w)
 
 	return c, nil
 }
