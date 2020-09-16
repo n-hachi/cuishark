@@ -2,6 +2,8 @@ package cuishark
 
 import (
 	"context"
+	"log"
+	"runtime"
 	"unsafe"
 
 	"github.com/n-hachi/cuishark/internal/frontend"
@@ -50,6 +52,14 @@ func (c *Cuishark) End() {
 }
 
 func (c *Cuishark) Run(ctx context.Context) (err error) {
+	// logging
+	pc, file, _, _ := runtime.Caller(0)
+	fname := runtime.FuncForPC(pc).Name()
+	log.Printf("[start] file=%s, func=%s\n", file, fname)
+	defer func() {
+		log.Printf("[end] file=%s, func=%s\n", file, fname)
+	}()
+
 	c.f.Draw()
 
 	keyChan := c.f.OpenChan(ctx)
