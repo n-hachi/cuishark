@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/n-hachi/cuishark/internal/cuishark"
+	"github.com/n-hachi/cuishark/internal/utils"
 )
 
 func main() {
@@ -20,6 +22,13 @@ func main() {
 }
 
 func _main() int {
+	// Generate logger
+	w, err := utils.IoWriter()
+	if err != nil {
+		panic(err)
+	}
+	log.SetOutput(w)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

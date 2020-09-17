@@ -2,6 +2,8 @@ package packet
 
 import (
 	"fmt"
+	"log"
+	"runtime"
 	"strings"
 	"unicode"
 
@@ -39,6 +41,14 @@ type Packet struct {
 }
 
 func NewPacket(gp gopacket.Packet) (p *Packet) {
+	// logging
+	pc, file, _, _ := runtime.Caller(0)
+	fname := runtime.FuncForPC(pc).Name()
+	log.Printf("[start] file=%s, func=%s", file, fname)
+	defer func() {
+		log.Printf("[end] file=%s, func=%s", file, fname)
+	}()
+
 	p = new(Packet)
 	for _, gl := range gp.Layers() {
 		// Do not regard 'Payload' layertype as main target layer.

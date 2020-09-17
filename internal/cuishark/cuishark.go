@@ -2,6 +2,8 @@ package cuishark
 
 import (
 	"context"
+	"log"
+	"runtime"
 	"unsafe"
 
 	"github.com/n-hachi/cuishark/internal/frontend"
@@ -50,6 +52,14 @@ func (c *Cuishark) End() {
 }
 
 func (c *Cuishark) Run(ctx context.Context) (err error) {
+	// logging
+	pc, file, _, _ := runtime.Caller(0)
+	fname := runtime.FuncForPC(pc).Name()
+	log.Printf("[start] file=%s, func=%s", file, fname)
+	defer func() {
+		log.Printf("[end] file=%s, func=%s", file, fname)
+	}()
+
 	c.f.Draw()
 
 	keyChan := c.f.OpenChan(ctx)
@@ -64,8 +74,10 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 				var d utils.Direction
 				if ch == "j" {
 					d = utils.Down
+					log.Printf("key input: down")
 				} else {
 					d = utils.Up
+					log.Printf("key input: up")
 				}
 
 				switch c.s.PaneIdx() {
@@ -80,11 +92,13 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 				}
 			} else if k == gc.KEY_TAB {
 				c.s.RotatePaneIdx()
+				log.Printf("key input: rotate")
 			}
 
 		case gp, ok := <-pctChan:
 			if !ok {
 				pctChan = nil
+				log.Printf("channel close")
 			} else {
 				p := packet.NewPacket(gp)
 				c.s.AppendPacket(p)
