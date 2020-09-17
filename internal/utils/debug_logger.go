@@ -5,15 +5,15 @@ package utils
 import (
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
 // IoWriter returns temporary file.
 func IoWriter() (w io.Writer, err error) {
-	pid := os.Getpid()
-	tmp := os.TempDir() + "/"
-	fname := "cuishark-" + strconv.Itoa(pid)
-	fullname := tmp + fname
+	tmpdir := os.TempDir() + "/"
+	fname := "cuishark-" + strconv.Itoa(os.Getpid())
+	fullname := filepath.FromSlash(tmpdir + fname)
 
 	w, err = os.Create(fullname)
 	if err != nil {
