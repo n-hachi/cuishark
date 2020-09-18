@@ -10,18 +10,17 @@ const (
 )
 
 type Status struct {
-	pl        []*packet.Packet
-	packetIdx int
-	detailIdx int
-	binaryIdx int
-	paneIdx   int
+	pl         []*packet.Packet
+	packetIdx  int
+	detailIdx  int
+	binaryIdxs []int
+	paneIdx    int
 }
 
 func NewStatus() (s *Status, err error) {
 	s = &Status{}
 	s.packetIdx = 0
 	s.detailIdx = 0
-	s.binaryIdx = 0
 	s.paneIdx = 0
 
 	return s, nil
@@ -29,6 +28,7 @@ func NewStatus() (s *Status, err error) {
 
 func (s *Status) AppendPacket(p *packet.Packet) {
 	s.pl = append(s.pl, p)
+	s.binaryIdxs = append(s.binaryIdxs, 0)
 }
 
 func (s *Status) PacketList() (pl []*packet.Packet) {
@@ -73,13 +73,13 @@ func (s *Status) MoveDetailIdx(d Direction) {
 func (s *Status) MoveBinaryIdx(d Direction) {
 	switch d {
 	case Up:
-		if s.binaryIdx > 0 {
-			s.binaryIdx--
+		if s.binaryIdxs[s.packetIdx] > 0 {
+			s.binaryIdxs[s.packetIdx]--
 		}
 	case Down:
 		p := s.FocusedPacket()
-		if s.binaryIdx < (len(p.Binary()) - 1) {
-			s.binaryIdx++
+		if s.binaryIdxs[s.packetIdx] < (len(p.Binary()) - 1) {
+			s.binaryIdxs[s.packetIdx]++
 		}
 	default:
 		panic("Code error, in MoveBinaryIdx")
@@ -99,7 +99,7 @@ func (s *Status) DetailIdx() (detailIdx int) {
 }
 
 func (s *Status) BinaryIdx() (binaryIdx int) {
-	return s.binaryIdx
+	return s.binaryIdxs[s.PacketIdx()]
 }
 
 func (s *Status) RotatePaneIdx() (newIdx int) {
