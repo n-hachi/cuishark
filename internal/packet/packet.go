@@ -27,6 +27,11 @@ func (l *Layer) Detail() (sl []string) {
 	return sl
 }
 
+// LayerType returns this instance layer type.
+func (l *Layer) LayerType() (layerType gopacket.LayerType) {
+	return l.gl.LayerType()
+}
+
 func NewLayer(gl gopacket.Layer) (l *Layer) {
 	return &Layer{
 		gl: gl,

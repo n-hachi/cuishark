@@ -1,6 +1,9 @@
 package utils
 
-import "github.com/n-hachi/cuishark/internal/packet"
+import (
+	"github.com/google/gopacket"
+	"github.com/n-hachi/cuishark/internal/packet"
+)
 
 type Direction int
 
@@ -9,10 +12,18 @@ const (
 	Down
 )
 
+type Display int
+
+const (
+	Hide Display = iota
+	Show
+)
+
 type Status struct {
 	pl         []*packet.Packet
 	packetIdx  int
 	detailIdx  int
+	layerMap   map[gopacket.LayerType]Display
 	binaryIdxs []int
 	paneIdx    int
 }
@@ -29,6 +40,14 @@ func NewStatus() (s *Status, err error) {
 func (s *Status) AppendPacket(p *packet.Packet) {
 	s.pl = append(s.pl, p)
 	s.binaryIdxs = append(s.binaryIdxs, 0)
+
+	// If you don't have layer type information, add it with hide setting.
+	for _, l := range p.LayerList() {
+		lt := l.LayerType()
+		if _, ok := s.layerMap[lt]; !ok {
+			s.layerMap[lt] = Hide
+		}
+	}
 }
 
 func (s *Status) PacketList() (pl []*packet.Packet) {
