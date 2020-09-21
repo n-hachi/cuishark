@@ -21,8 +21,12 @@ func (l *Layer) Oneline() (s string) {
 	return s
 }
 
+func (l *Layer) Abstract() (s string) {
+	s = l.gl.LayerType().String()
+	return s
+}
+
 func (l *Layer) Detail() (sl []string) {
-	sl = append(sl, l.gl.LayerType().String())
 	sl = append(sl, Detail(l.gl)...)
 	return sl
 }

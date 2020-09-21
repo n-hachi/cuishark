@@ -22,7 +22,7 @@ const (
 type Status struct {
 	pl         []*packet.Packet
 	packetIdx  int
-	detailIdx  int
+	detailIdxs []int
 	layerMap   map[gopacket.LayerType]Display
 	binaryIdxs []int
 	paneIdx    int
@@ -31,14 +31,15 @@ type Status struct {
 func NewStatus() (s *Status, err error) {
 	s = &Status{}
 	s.packetIdx = 0
-	s.detailIdx = 0
 	s.paneIdx = 0
+	s.layerMap = map[gopacket.LayerType]Display{}
 
 	return s, nil
 }
 
 func (s *Status) AppendPacket(p *packet.Packet) {
 	s.pl = append(s.pl, p)
+	s.detailIdxs = append(s.detailIdxs, 0)
 	s.binaryIdxs = append(s.binaryIdxs, 0)
 
 	// If you don't have layer type information, add it with hide setting.
@@ -76,13 +77,13 @@ func (s *Status) MovePacketIdx(d Direction) {
 func (s *Status) MoveDetailIdx(d Direction) {
 	switch d {
 	case Up:
-		if s.detailIdx > 0 {
-			s.detailIdx--
+		if s.detailIdxs[s.packetIdx] > 0 {
+			s.detailIdxs[s.packetIdx]--
 		}
 	case Down:
 		p := s.FocusedPacket()
-		if s.detailIdx < (p.Size() - 1) {
-			s.detailIdx++
+		if s.detailIdxs[s.packetIdx] < (p.Size() - 1) {
+			s.detailIdxs[s.packetIdx]++
 		}
 	default:
 		panic("Code error, in MoveDetailIdx")
@@ -114,7 +115,7 @@ func (s *Status) PacketIdx() (packetIdx int) {
 }
 
 func (s *Status) DetailIdx() (detailIdx int) {
-	return s.detailIdx
+	return s.detailIdxs[s.PacketIdx()]
 }
 
 func (s *Status) BinaryIdx() (binaryIdx int) {
@@ -128,4 +129,8 @@ func (s *Status) RotatePaneIdx() (newIdx int) {
 
 func (s *Status) FocusedPacket() (p *packet.Packet) {
 	return s.PacketList()[s.PacketIdx()]
+}
+
+func (s *Status) IsShowLayer(t gopacket.LayerType) (flg bool) {
+	return s.layerMap[t] == Show
 }

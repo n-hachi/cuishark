@@ -29,28 +29,30 @@ func (dp *DetailPane) Reflesh(status *utils.Status) (err error) {
 
 	height := 0
 	for i, l := range p.LayerList() {
-		for j, s := range l.Detail() {
-			// Check whether current focused pane is myself, and current line.
-			flg := (status.DetailIdx() == i && status.PaneIdx() == dp.idx && j == 0)
+		a := l.Abstract()
 
-			// Set underline on
-			if flg {
-				if err = dp.w.AttrOn(gc.A_UNDERLINE); err != nil {
-					return err
-				}
+		flg := (status.DetailIdx() == i && status.PaneIdx() == dp.idx)
+		if flg {
+			if err = dp.w.AttrOn(gc.A_UNDERLINE); err != nil {
+				return err
 			}
+		}
 
-			s = utils.CutStringTail(s, x)
-			dp.w.MovePrintf(height, 0, "%s", s)
+		dp.w.MovePrint(height, 0, a)
+		height++
 
-			// Set underline off
-			if flg {
-				if err = dp.w.AttrOff(gc.A_UNDERLINE); err != nil {
-					return err
-				}
+		if flg {
+			if err = dp.w.AttrOff(gc.A_UNDERLINE); err != nil {
+				return err
 			}
+		}
 
-			height++
+		if status.IsShowLayer(l.LayerType()) {
+			for _, s := range l.Detail() {
+				s = utils.CutStringTail(s, x)
+				dp.w.MovePrintf(height, 0, "%s", s)
+				height++
+			}
 		}
 	}
 
