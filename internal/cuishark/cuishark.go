@@ -93,6 +93,9 @@ func (c *Cuishark) Run(ctx context.Context) (err error) {
 			} else if k == gc.KEY_TAB {
 				c.s.RotatePaneIdx()
 				log.Printf("key input: rotate")
+			} else if k == ' ' {
+				log.Printf("key input: space")
+				c.s.ToggleDetail()
 			}
 
 		case gp, ok := <-pctChan:

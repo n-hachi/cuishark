@@ -134,3 +134,16 @@ func (s *Status) FocusedPacket() (p *packet.Packet) {
 func (s *Status) IsShowLayer(t gopacket.LayerType) (flg bool) {
 	return s.layerMap[t] == Show
 }
+
+func (s *Status) ToggleDetail() (toggled Display) {
+	p := s.FocusedPacket()
+	l := p.Layer(s.DetailIdx())
+	lt := l.LayerType()
+	if s.layerMap[lt] == Hide {
+		toggled = Show
+	} else {
+		toggled = Hide
+	}
+	s.layerMap[lt] = toggled
+	return toggled
+}
